@@ -24,8 +24,8 @@ export default function ComingSoonPage() {
     },
     {
       icon: <Zap className="w-8 h-8" />,
-      title: "Connects Players with Stakeholders",
-      description: "Provides a platform for players to showcase their profile and achievements, allowing coaches, clubs, and sports organizations to discover and engage with talent."
+      title: "Centralizes Sports Management",
+      description: "Brings teams, tournaments, match history, and performance insights into a single platform for smooth management and analysis."
     },
     {
       icon: <Bell className="w-8 h-8" />,
