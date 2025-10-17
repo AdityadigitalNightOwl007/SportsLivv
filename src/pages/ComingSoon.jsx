@@ -9,10 +9,36 @@ import {
   BellDot,
   CheckCircle,
   XCircle,
+  Eye,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView, useMotionValue, useSpring, animate } from "framer-motion";
 import Logo from "../assets/logo.png";
 import Logo1 from "../assets/logo1.png";
+
+// Counter animation component
+function Counter({ value, duration = 2 }) {
+  const ref = useRef(null);
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, { duration: duration * 1000 });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView) {
+      animate(motionValue, value, { duration: duration });
+    }
+  }, [isInView, value, duration, motionValue]);
+
+  useEffect(() => {
+    springValue.on("change", (latest) => {
+      if (ref.current) {
+        ref.current.textContent = Math.floor(latest);
+      }
+    });
+  }, [springValue]);
+
+  return <span ref={ref}>0</span>;
+}
 
 export default function ComingSoonPage() {
   const [countdown, setCountdown] = useState({
@@ -27,6 +53,7 @@ export default function ComingSoonPage() {
   const [apiResponse, setApiResponse] = useState({ message: "", success: false });
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [visitorCount, setVisitorCount] = useState(176);
 
   const sports = [
     "Cricket",
@@ -123,6 +150,21 @@ export default function ComingSoonPage() {
     fetchSubscriberCount();
   }, []);
 
+  // Visitor counter - starting from 176
+  useEffect(() => {
+    const updateVisitorCount = () => {
+      let currentCount = 176;
+      
+      // Increment count
+      currentCount += 1;
+      
+      // Update state
+      setVisitorCount(currentCount);
+    };
+
+    updateVisitorCount();
+  }, []);
+
   const handleNotifyMe = async (e) => {
     e.preventDefault();
 
@@ -216,7 +258,12 @@ export default function ComingSoonPage() {
 
       <div className="relative z-10 container mx-auto px-6 py-12 min-h-screen flex flex-col">
         {/* Header */}
-        <header className="flex justify-between items-center mb-10">
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-between items-center mb-10"
+        >
           <div className="flex items-center gap-3">
               <img src={Logo1} alt="Logo1" className="w-40 h-28 rounded-md"/>
           </div>
@@ -225,12 +272,17 @@ export default function ComingSoonPage() {
             <Clock className="w-4 h-4" />
             <span>Launching Soon</span>
           </div>
-        </header>
+        </motion.header>
 
         {/* Main Content */}
         <div className="max-w-6xl mx-auto flex-1 flex flex-col justify-center">
           {/* Hero Section */}
-          <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center mb-20"
+          >
             <h2 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
               Revolutionizing
               <br />
@@ -261,10 +313,16 @@ export default function ComingSoonPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Email Notification Section */}
-          <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-20"
+          >
             <h3 className="text-3xl font-bold mb-6 text-white">
               Get Early Access
             </h3>
@@ -279,7 +337,7 @@ export default function ComingSoonPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-slate-300">
                 <Users className="w-4 h-4" />
                 <span className="text-sm">
-                  <span className="font-semibold text-white">{subscriberCount}+</span> people already registered
+                  <span className="font-semibold text-white"><Counter value={subscriberCount} />+</span> people already registered
                 </span>
               </div>
             </div>
@@ -313,11 +371,15 @@ export default function ComingSoonPage() {
               
               {/* API Response Message */}
               {apiResponse.message && (
-                <div className={`mt-4 p-4 rounded-xl backdrop-blur-sm border ${
-                  apiResponse.success 
-                    ? "bg-green-500/10 border-green-500/30 text-green-400" 
-                    : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
-                }`}>
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-4 p-4 rounded-xl backdrop-blur-sm border ${
+                    apiResponse.success 
+                      ? "bg-green-500/10 border-green-500/30 text-green-400" 
+                      : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
+                  }`}
+                >
                   <div className="flex items-center justify-center gap-2">
                     {apiResponse.success ? (
                       <CheckCircle className="w-5 h-5" />
@@ -328,20 +390,30 @@ export default function ComingSoonPage() {
                       {apiResponse.message}
                     </span>
                   </div>
-                </div>
+                </motion.div>
               )}
             </form>
-          </div>
+          </motion.div>
 
           {/* Features Grid */}
-          <div className="mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="mb-20"
+          >
             <h3 className="text-3xl font-bold text-center mb-12 text-white">
               Empowering the Sports Community
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
               {features.map((feature, index) => (
-                <div
+                <motion.div
                   key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/50 transition-all hover:shadow-xl hover:shadow-blue-500/10 group"
                 >
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-white/10">
@@ -353,17 +425,23 @@ export default function ComingSoonPage() {
                   <p className="text-slate-400 leading-relaxed">
                     {feature.description}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Stats Section */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 mb-20">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 mb-20"
+          >
+            <div className="flex justify-around item gap-8 text-center">
               <div>
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2">
-                  7+
+                  <Counter value={7} duration={2} />+
                 </div>
                 <div className="text-slate-400">Sports Supported</div>
               </div>
@@ -375,22 +453,33 @@ export default function ComingSoonPage() {
               </div>
               <div>
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-                  24/7
+                  <Counter value={24} duration={2} />/7
                 </div>
                 <div className="text-slate-400">Talent Discovery</div>
               </div>
               <div>
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
-                  {subscriberCount}+
+                  <Counter value={visitorCount} duration={2} />+
+                </div>
+                <div className="text-slate-400">Website Visits</div>
+              </div>
+              <div>
+                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
+                  <Counter value={subscriberCount} duration={2} />+
                 </div>
                 <div className="text-slate-400">Early Subscribers</div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-white/10 pt-8 mt-20">
+        <motion.footer 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="border-t border-white/10 pt-8 mt-20"
+        >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
             <div>© 2025 SportsLivv. All rights reserved.</div>
             <div className="flex gap-6">
@@ -405,7 +494,7 @@ export default function ComingSoonPage() {
               </a>
             </div>
           </div>
-        </footer>
+        </motion.footer>
       </div>
     </div>
   );
