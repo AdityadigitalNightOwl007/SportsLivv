@@ -150,20 +150,30 @@ export default function ComingSoonPage() {
     fetchSubscriberCount();
   }, []);
 
-  // Visitor counter - starting from 176
-  useEffect(() => {
-    const updateVisitorCount = () => {
-      let currentCount = 176;
-      
-      // Increment count
-      currentCount += 1;
-      
-      // Update state
-      setVisitorCount(currentCount);
-    };
+useEffect(() => {
+  const updateVisitorCount = () => {
+    // Get current count from localStorage
+    let storedCount = localStorage.getItem("sportslivv_visitor_count");
 
-    updateVisitorCount();
-  }, []);
+    if (!storedCount) {
+      // If not present, initialize with 176
+      storedCount = "176";
+      localStorage.setItem("sportslivv_visitor_count", storedCount);
+    }
+
+    let currentCount = parseInt(storedCount, 10);
+
+    // Immediately show the current value
+    setVisitorCount(currentCount);
+
+    // Increment for the next visit
+    const newCount = currentCount + 1;
+    localStorage.setItem("sportslivv_visitor_count", newCount.toString());
+  };
+
+  updateVisitorCount();
+}, []);
+
 
   const handleNotifyMe = async (e) => {
     e.preventDefault();
@@ -262,14 +272,14 @@ export default function ComingSoonPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-between items-center mb-10"
+          className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 md:mb-10 gap-4"
         >
           <div className="flex items-center gap-3">
-              <img src={Logo1} alt="Logo1" className="w-40 h-28 rounded-md"/>
+              <img src={Logo1} alt="Logo1" className="w-28 h-20 sm:w-32 sm:h-24 md:w-40 md:h-28 rounded-md"/>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-slate-300">
-            <Clock className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-300">
+            <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Launching Soon</span>
           </div>
         </motion.header>
@@ -281,9 +291,9 @@ export default function ComingSoonPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center mb-20"
+            className="text-center mb-12 md:mb-20"
           >
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight text-white px-4">
               Revolutionizing
               <br />
               <span className="bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -291,24 +301,24 @@ export default function ComingSoonPage() {
               </span>
             </h2>
 
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-4">
               A comprehensive platform that connects players, coaches, and
               organizations through advanced tracking, talent recognition, and
               player development tools
             </p>
 
             {/* Sport Tags */}
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-12 px-4">
               {sports.map((sport, index) => (
                 <div
                   key={sport}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 backdrop-blur-sm border ${
+                  className={`px-3 sm:px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 backdrop-blur-sm border ${
                     index === currentSport
                       ? "bg-gradient-to-r from-green-500 to-blue-500 text-white shadow-lg shadow-blue-500/25 scale-105 border-transparent"
                       : "bg-white/5 text-slate-300 hover:bg-white/10 border-white/10 hover:border-white/20"
                   }`}
                 >
-                  <span className="mr-2">{sportIcons[index]}</span>
+                  <span className="mr-1 md:mr-2">{sportIcons[index]}</span>
                   {sport}
                 </div>
               ))}
@@ -321,44 +331,44 @@ export default function ComingSoonPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-20"
+            className="text-center mb-12 md:mb-20 px-4"
           >
-            <h3 className="text-3xl font-bold mb-6 text-white">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-white">
               Get Early Access
             </h3>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed">
               Be the first to know when we launch. Enter your email to get
               notified about updates, early access opportunities, and exclusive
               content.
             </p>
 
             {/* Subscriber Count */}
-            <div className="mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-slate-300">
-                <Users className="w-4 h-4" />
-                <span className="text-sm">
+            <div className="mb-6 md:mb-8">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-slate-300">
+                <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">
                   <span className="font-semibold text-white"><Counter value={subscriberCount} />+</span> people already registered
                 </span>
               </div>
             </div>
 
             <form onSubmit={handleNotifyMe} className="max-w-md mx-auto">
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="flex-1 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                  className="flex-1 px-4 sm:px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                   required
                   disabled={isLoading}
                 />
                 <button
                   type="submit"
                   disabled={isLoading || isSubscribed}
-                  className="flex gap-x-2 px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full hover:from-green-600 hover:to-blue-600 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center gap-x-2 px-6 sm:px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full hover:from-green-600 hover:to-blue-600 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base whitespace-nowrap"
                 > 
-                  {!isLoading && !isSubscribed && <BellDot className="w-5 h-5" />}
+                  {!isLoading && !isSubscribed && <BellDot className="w-4 h-4 sm:w-5 sm:h-5" />}
                   {isLoading ? (
                     "Subscribing..."
                   ) : isSubscribed ? (
@@ -374,7 +384,7 @@ export default function ComingSoonPage() {
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 p-4 rounded-xl backdrop-blur-sm border ${
+                  className={`mt-4 p-3 sm:p-4 rounded-xl backdrop-blur-sm border ${
                     apiResponse.success 
                       ? "bg-green-500/10 border-green-500/30 text-green-400" 
                       : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
@@ -382,11 +392,11 @@ export default function ComingSoonPage() {
                 >
                   <div className="flex items-center justify-center gap-2">
                     {apiResponse.success ? (
-                      <CheckCircle className="w-5 h-5" />
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     ) : (
-                      <XCircle className="w-5 h-5" />
+                      <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     )}
-                    <span className="text-sm font-medium">
+                    <span className="text-xs sm:text-sm font-medium">
                       {apiResponse.message}
                     </span>
                   </div>
@@ -401,12 +411,12 @@ export default function ComingSoonPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="mb-20"
+            className="mb-12 md:mb-20 px-4"
           >
-            <h3 className="text-3xl font-bold text-center mb-12 text-white">
+            <h3 className="text-2xl sm:text-3xl font-bold text-center mb-8 md:mb-12 text-white">
               Empowering the Sports Community
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}
@@ -414,15 +424,15 @@ export default function ComingSoonPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-blue-500/50 transition-all hover:shadow-xl hover:shadow-blue-500/10 group"
+                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 md:p-8 hover:border-blue-500/50 transition-all hover:shadow-xl hover:shadow-blue-500/10 group"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-white/10">
-                    <div className="text-blue-400">{feature.icon}</div>
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-xl flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform border border-white/10">
+                    <div className="text-blue-400 scale-75 sm:scale-90 md:scale-100">{feature.icon}</div>
                   </div>
-                  <h4 className="text-xl font-semibold mb-4 text-white">
+                  <h4 className="text-lg sm:text-xl font-semibold mb-3 md:mb-4 text-white">
                     {feature.title}
                   </h4>
-                  <p className="text-slate-400 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
                     {feature.description}
                   </p>
                 </motion.div>
@@ -436,38 +446,38 @@ export default function ComingSoonPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 mb-20"
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 md:p-12 mb-12 md:mb-20 mx-4 sm:mx-0"
           >
-            <div className="flex justify-around item gap-8 text-center">
-              <div>
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 text-center">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2">
                   <Counter value={7} duration={2} />+
                 </div>
-                <div className="text-slate-400">Sports Supported</div>
+                <div className="text-xs sm:text-sm text-slate-400">Sports Supported</div>
               </div>
-              <div>
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
                   Real-Time
                 </div>
-                <div className="text-slate-400">Performance Tracking</div>
+                <div className="text-xs sm:text-sm text-slate-400">Performance Tracking</div>
               </div>
-              <div>
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
                   <Counter value={24} duration={2} />/7
                 </div>
-                <div className="text-slate-400">Talent Discovery</div>
+                <div className="text-xs sm:text-sm text-slate-400">Talent Discovery</div>
               </div>
-              <div>
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
                   <Counter value={visitorCount} duration={2} />+
                 </div>
-                <div className="text-slate-400">Website Visits</div>
+                <div className="text-xs sm:text-sm text-slate-400">Website Visits</div>
               </div>
-              <div>
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
+              <div className="flex flex-col items-center col-span-2 sm:col-span-1">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
                   <Counter value={subscriberCount} duration={2} />+
                 </div>
-                <div className="text-slate-400">Early Subscribers</div>
+                <div className="text-xs sm:text-sm text-slate-400">Early Subscribers</div>
               </div>
             </div>
           </motion.div>
@@ -478,11 +488,11 @@ export default function ComingSoonPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="border-t border-white/10 pt-8 mt-20"
+          className="border-t border-white/10 pt-6 md:pt-8 mt-12 md:mt-20"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs sm:text-sm text-slate-400 px-4">
             <div>© 2025 SportsLivv. All rights reserved.</div>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
               <a href="#" className="hover:text-white transition-colors">
                 Privacy Policy
               </a>
