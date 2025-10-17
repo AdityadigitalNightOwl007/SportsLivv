@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Logo from "../assets/logo.png";
+import Logo1 from "../assets/logo1.png";
 
 export default function ComingSoonPage() {
   const [countdown, setCountdown] = useState({
@@ -24,6 +25,8 @@ export default function ComingSoonPage() {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [apiResponse, setApiResponse] = useState({ message: "", success: false });
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const sports = [
     "Cricket",
@@ -98,29 +101,47 @@ export default function ComingSoonPage() {
     return () => clearInterval(interval);
   }, [sports.length]);
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setTimeout(() => {
-        setEmail("");
-        setIsSubscribed(false);
-      }, 3000);
-    }
-  };
+  // Fetch subscriber count
+  useEffect(() => {
+    const fetchSubscriberCount = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/pre-launch/count`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setSubscriberCount(data.preLaunchUserCount);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching subscriber count:", error);
+      }
+    };
 
-  // Add this function inside the component, before the return statement
+    fetchSubscriberCount();
+  }, []);
+
   const handleNotifyMe = async (e) => {
     e.preventDefault();
 
     if (!email) {
-      alert("Please enter your email address");
+      setApiResponse({
+        message: "Please enter your email address",
+        success: false
+      });
+      setTimeout(() => {
+        setApiResponse({ message: "", success: false });
+      }, 3000);
       return;
     }
 
+    setIsLoading(true);
+
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/crickDummyMail`,
+        `${import.meta.env.VITE_API_URL}/api/pre-launch/capture/user-info`,
         {
           method: "POST",
           headers: {
@@ -134,11 +155,23 @@ export default function ComingSoonPage() {
 
       if (response.ok) {
         setApiResponse({
-          message: data.message,
-          success: data.success
+          message: "Successfully registered! We'll notify you when we launch.",
+          success: true
         });
         setIsSubscribed(true);
         setEmail("");
+        
+        // Update subscriber count by fetching the latest count
+        const countResponse = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/pre-launch/count`
+        );
+        if (countResponse.ok) {
+          const countData = await countResponse.json();
+          if (countData.success) {
+            setSubscriberCount(countData.preLaunchUserCount);
+          }
+        }
+        
         setTimeout(() => {
           setIsSubscribed(false);
           setApiResponse({ message: "", success: false });
@@ -161,6 +194,8 @@ export default function ComingSoonPage() {
       setTimeout(() => {
         setApiResponse({ message: "", success: false });
       }, 5000);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -181,17 +216,9 @@ export default function ComingSoonPage() {
 
       <div className="relative z-10 container mx-auto px-6 py-12 min-h-screen flex flex-col">
         {/* Header */}
-        <header className="flex justify-between items-center mb-20">
+        <header className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
-            <img src={Logo} alt="logo" className="w-12 h-10 rounded-md" />
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-white">
-                SportsLivv
-              </h1>
-              <p className="text-sm text-slate-300">
-                Your Sports Command Center
-              </p>
-            </div>
+              <img src={Logo1} alt="Logo1" className="w-40 h-28 rounded-md"/>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-slate-300">
@@ -247,6 +274,16 @@ export default function ComingSoonPage() {
               content.
             </p>
 
+            {/* Subscriber Count */}
+            <div className="mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-slate-300">
+                <Users className="w-4 h-4" />
+                <span className="text-sm">
+                  <span className="font-semibold text-white">{subscriberCount}+</span> people already registered
+                </span>
+              </div>
+            </div>
+
             <form onSubmit={handleNotifyMe} className="max-w-md mx-auto">
               <div className="flex gap-3">
                 <input
@@ -256,15 +293,21 @@ export default function ComingSoonPage() {
                   placeholder="Enter your email address"
                   className="flex-1 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                   required
-                  disabled={isSubscribed}
+                  disabled={isLoading}
                 />
                 <button
                   type="submit"
-                  disabled={isSubscribed}
+                  disabled={isLoading || isSubscribed}
                   className="flex gap-x-2 px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full hover:from-green-600 hover:to-blue-600 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
                 > 
-                  {!isSubscribed &&  <BellDot />}
-                  {isSubscribed ? "Subscribed!" : "Notify Me"}
+                  {!isLoading && !isSubscribed && <BellDot className="w-5 h-5" />}
+                  {isLoading ? (
+                    "Subscribing..."
+                  ) : isSubscribed ? (
+                    "Subscribed!"
+                  ) : (
+                    "Notify Me"
+                  )}
                 </button>
               </div>
               
@@ -317,7 +360,7 @@ export default function ComingSoonPage() {
 
           {/* Stats Section */}
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 mb-20">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2">
                   7+
@@ -335,6 +378,12 @@ export default function ComingSoonPage() {
                   24/7
                 </div>
                 <div className="text-slate-400">Talent Discovery</div>
+              </div>
+              <div>
+                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent mb-2">
+                  {subscriberCount}+
+                </div>
+                <div className="text-slate-400">Early Subscribers</div>
               </div>
             </div>
           </div>
