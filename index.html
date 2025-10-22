@@ -1,12 +1,80 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- ✅ Basic meta -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./src/assets/logo.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sportslivv</title>
+
+    <title>SportsLivv | Live Sports Scores, News & Highlights</title>
+    <meta
+      name="description"
+      content="Get real-time sports scores, match highlights, and news from across the world with SportsLivv — your all-in-one live sports experience."
+    />
+
+    <!-- ✅ Keywords (not as important anymore, but still fine) -->
+    <meta
+      name="keywords"
+      content="sports, live scores, sports news, football, cricket, basketball, sportslivv"
+    />
+
+    <!-- ✅ Canonical URL -->
+    <link rel="canonical" href="https://www.sportslivv.com/" />
+
+    <!-- ✅ Favicon -->
+    <link rel="icon" type="image/png" href="/src/assets/logo1.png" />
+
+    <!-- ✅ Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.sportslivv.com/" />
+    <meta property="og:title" content="SportsLivv | Live Sports Scores, News & Highlights" />
+    <meta
+      property="og:description"
+      content="Follow live scores, match stats, and the latest sports news all in one place."
+    />
+    <meta property="og:image" content="https://www.sportslivv.com/og-image.jpg" />
+
+    <!-- ✅ Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://www.sportslivv.com/" />
+    <meta name="twitter:title" content="SportsLivv | Live Sports Scores, News & Highlights" />
+    <meta
+      name="twitter:description"
+      content="Get real-time updates and sports insights with SportsLivv."
+    />
+    <meta name="twitter:image" content="https://www.sportslivv.com/og-image.jpg" />
+
+    <!-- ✅ Theme & color -->
+    <meta name="theme-color" content="#0b0d17" />
+
+    <!-- ✅ PWA & Apple Touch -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/src/assets/logo.png" />
+
+    <!-- ✅ Preload critical assets (optional) -->
+    <link rel="preload" as="image" href="/src/assets/logo.png" />
+    <link rel="preload" as="image" href="/src/assets/logo1.png" />
+
+    <!-- ✅ Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json"> 
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "SportsLivv",
+        "url": "https://www.sportslivv.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.sportslivv.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
   </head>
   <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
