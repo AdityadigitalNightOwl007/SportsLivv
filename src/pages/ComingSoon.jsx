@@ -14,7 +14,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useMotionValue, useSpring, animate } from "framer-motion";
 import Logo from "../assets/logo.png";
-import Logo1 from "../assets/logo1.png";
+import Logo1 from "../assets/logo2.jpg";
 
 // Counter animation component
 function Counter({ value, duration = 2 }) {
@@ -275,7 +275,7 @@ useEffect(() => {
           className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 md:mb-10 gap-4"
         >
           <div className="flex items-center gap-3">
-              <img src={Logo1} alt="Logo1" className="w-28 h-20 sm:w-32 sm:h-24 md:w-40 md:h-28 rounded-md"/>
+              <img src={Logo1} alt="Logo1" className="w-10 h-10 sm:w-20 sm:h-20 md:w-32 md:h-20 rounded-md"/>
           </div>
 
           <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-300">

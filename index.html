@@ -6,57 +6,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>SportsLivv | Live Sports Scores, News & Highlights</title>
+    <!-- ✅ Better and more descriptive title -->
+    <title>SportsLivv – Live Scores, Highlights & Sports News</title>
+
+    <!-- ✅ Improved description -->
     <meta
       name="description"
-      content="Get real-time sports scores, match highlights, and news from across the world with SportsLivv — your all-in-one live sports experience."
+      content="Stay updated with live sports scores, match highlights, and breaking sports news across football, cricket, basketball, and more — all on SportsLivv."
     />
 
-    <!-- ✅ Keywords (not as important anymore, but still fine) -->
+    <!-- ✅ Keywords -->
     <meta
       name="keywords"
-      content="sports, live scores, sports news, football, cricket, basketball, sportslivv"
+      content="sports, live scores, highlights, match news, football, cricket, basketball, SportsLivv"
     />
 
-    <!-- ✅ Canonical URL -->
+    <!-- ✅ Canonical URL (use your main domain, non-www or www consistently) -->
     <link rel="canonical" href="https://www.sportslivv.com/" />
 
-    <!-- ✅ Favicon -->
-    <link rel="icon" type="image/png" href="/src/assets/logo1.png" />
+    <!-- ✅ Favicon (must exist in /public) -->
+    <link rel="icon" type="image/png" href="/src/assets/logo.png" />
 
-    <!-- ✅ Open Graph / Facebook -->
+    <!-- ✅ Open Graph (Facebook, LinkedIn, etc.) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.sportslivv.com/" />
-    <meta property="og:title" content="SportsLivv | Live Sports Scores, News & Highlights" />
+    <meta
+      property="og:title"
+      content="SportsLivv – Live Sports Scores, News & Highlights"
+    />
     <meta
       property="og:description"
-      content="Follow live scores, match stats, and the latest sports news all in one place."
+      content="Follow live scores, match stats, and the latest sports news all in one place — SportsLivv."
     />
     <meta property="og:image" content="https://www.sportslivv.com/og-image.jpg" />
 
     <!-- ✅ Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.sportslivv.com/" />
-    <meta name="twitter:title" content="SportsLivv | Live Sports Scores, News & Highlights" />
+    <meta
+      name="twitter:title"
+      content="SportsLivv – Live Sports Scores, News & Highlights"
+    />
     <meta
       name="twitter:description"
       content="Get real-time updates and sports insights with SportsLivv."
     />
     <meta name="twitter:image" content="https://www.sportslivv.com/og-image.jpg" />
 
-    <!-- ✅ Theme & color -->
+    <!-- ✅ Theme color -->
     <meta name="theme-color" content="#0b0d17" />
 
     <!-- ✅ PWA & Apple Touch -->
     <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/src/assets/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
 
-    <!-- ✅ Preload critical assets (optional) -->
-    <link rel="preload" as="image" href="/src/assets/logo.png" />
-    <link rel="preload" as="image" href="/src/assets/logo1.png" />
+    <!-- ✅ Preload important images (ensure they exist in /public) -->
+    <link rel="preload" as="image" href="/logo.png" />
+    <link rel="preload" as="image" href="/logo1.png" />
 
-    <!-- ✅ Structured Data (Schema.org JSON-LD) -->
-    <script type="application/ld+json"> 
+    <!-- ✅ Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -70,12 +79,21 @@
       }
     </script>
   </head>
+
   <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- ✅ Optional: Redirect non-www to www using JS (not as good as server redirect, but fallback) -->
+    <script>
+      if (window.location.hostname === "sportslivv.com") {
+        window.location.replace(
+          window.location.href.replace("sportslivv.com", "www.sportslivv.com")
+        );
+      }
+    </script>
   </body>
 </html>
